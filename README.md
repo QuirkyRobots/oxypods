@@ -29,6 +29,14 @@ Fields render live in the visual editor, not as raw shortcodes.
 
 ---
 
+## Example Screenshots
+
+<img width="959" height="473" alt="image" src="https://github.com/user-attachments/assets/ee287de1-73ed-4b5e-a7a2-ce35e20b9dcc" />
+
+<img width="959" height="473" alt="image" src="https://github.com/user-attachments/assets/bb84a2eb-bd8b-4ed6-969f-bdc211094d4f" />
+
+---
+
 ## Installation
 
 1. Download the latest release zip from [Releases](https://github.com/QuirkyRobots/oxypods/releases)
