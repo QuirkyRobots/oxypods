@@ -3,7 +3,7 @@
  * Plugin Name: OxyPods
  * Plugin URI:  https://github.com/QuirkyRobots/oxypods
  * Description: Exposes Pods custom fields in the Oxygen 6 Dynamic Data picker.
- * Version:     1.1.6
+ * Version:     1.1.6 Beta
  * Requires PHP: 8.0
  * Author:      QuirkyRobots
  * Author URI:  https://github.com/QuirkyRobots
