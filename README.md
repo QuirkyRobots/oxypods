@@ -1,4 +1,4 @@
-# OxyPods
+# ![OxyPods logo](https://raw.githubusercontent.com/QuirkyRobots/oxypods/main/assets/icon-512x512.png)
 
 **OxyPods** is a WordPress plugin that exposes [Pods](https://wordpress.org/plugins/pods/) custom fields in the [Oxygen 6](https://oxygenbuilder.com/) (Breakdance) Dynamic Data picker — including live preview in the visual editor.
 
