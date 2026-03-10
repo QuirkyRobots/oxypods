@@ -4,7 +4,7 @@ All notable changes to OxyPods are documented here.
 
 ---
 
-## [1.1.6] — 2026-03-08 — Security hardening
+## [1.1.6 Beta] — 2026-03-08 — Security hardening
 
 ### Fixed
 - **Password fields excluded:** Pods `password` field type is now explicitly blocked from registration. Previously it fell through to the `default` case and was exposed as a String field in the Dynamic Data picker, making plaintext credential values accessible to any user with editor access.
@@ -14,7 +14,7 @@ All notable changes to OxyPods are documented here.
 
 ---
 
-## [1.1.5] — 2026-03-08 — Live editor fix (root cause)
+## [1.1.5 Beta] — 2026-03-08 — Live editor fix (root cause)
 
 ### Fixed
 - **Fields showing as raw shortcodes in the Oxygen 6 live editor.** The Oxygen 6 builder previews dynamic data via a POST request to the post URL (`action=breakdance_dynamic_data_get`). Previous versions used the Pods ORM (`pods()`) and custom post ID resolution logic in `handler()`. These produced stray output (PHP notices, debug messages) that Breakdance's AJAX wrapper detected and converted into exceptions, causing the entire batch to fail and the builder to fall back to displaying raw shortcode text.
@@ -31,7 +31,7 @@ All notable changes to OxyPods are documented here.
 
 ---
 
-## [1.1.4] — 2026-03-08 — Output buffering attempt
+## [1.1.4 Beta] — 2026-03-08 — Output buffering attempt
 
 ### Changed
 - Added `ob_start()`/`ob_end_clean()` wrappers around all `handler()` bodies to catch stray output before it reached Breakdance's outer buffer.
@@ -42,7 +42,7 @@ All notable changes to OxyPods are documented here.
 
 ---
 
-## [1.1.3] — 2026-03-08 — Post ID detection improvements
+## [1.1.3 Beta] — 2026-03-08 — Post ID detection improvements
 
 ### Changed
 - Post ID resolution expanded to five fallback sources: `$_POST['id']` → `filter_input(INPUT_POST)` → `get_queried_object_id()` → `$GLOBALS['post']->ID` → `get_the_ID()`
@@ -53,7 +53,7 @@ All notable changes to OxyPods are documented here.
 
 ---
 
-## [1.1.2] — 2026-03-08 — Rebrand to OxyPods
+## [1.1.2 Beta] — 2026-03-08 — Rebrand to OxyPods
 
 ### Changed
 - Plugin renamed from "Pods + Oxygen 6 Integration" to **OxyPods**
@@ -67,7 +67,7 @@ All notable changes to OxyPods are documented here.
 
 ---
 
-## [1.1.1] — 2026-03-08 — Gallery field registration fix
+## [1.1.1 Beta] — 2026-03-08 — Gallery field registration fix
 
 ### Fixed
 - **Gallery fields not appearing in the Gallery type picker.** The field registration logic gated on `file_type` (the Pods option controlling which file types are allowed). Fields configured as "All Files" (`file_type = 'other'`) were being registered as `FileUrlField` (a string) instead of `GalleryField`, so they were filtered out when Type was set to Gallery in the picker.
@@ -80,7 +80,7 @@ All notable changes to OxyPods are documented here.
 
 ---
 
-## [1.1.0] — 2026-03-07 — Initial release
+## [1.1.0 Beta] — 2026-03-07 — Initial release
 
 ### Added
 - Registers all Pods post-type fields with the Oxygen 6 (Breakdance) Dynamic Data controller
