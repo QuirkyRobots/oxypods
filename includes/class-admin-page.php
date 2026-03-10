@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin settings page for OxyPods.
+ * Admin settings page for OxyPods...
  *
  * Adds Settings → OxyPods.
  * Shows: status, field list, and a Diagnostics table with raw meta values.
@@ -32,6 +32,13 @@ function oxypods_plugin_action_links( array $links ): array {
 }
 
 function oxypods_render_admin_page(): void {
+    // SECURITY: explicit capability check as defence-in-depth.
+    // add_options_page() already gates menu access, but this protects
+    // against direct callback invocation outside the normal menu flow.
+    if ( ! current_user_can( 'manage_options' ) ) {
+        wp_die( esc_html__( 'You do not have permission to view this page.', 'oxypods' ) );
+    }
+
     $pods_ok       = function_exists( 'pods_api' );
     $breakdance_ok = class_exists( 'Breakdance\\DynamicData\\DynamicDataController' );
     ?>
@@ -82,17 +89,20 @@ function oxypods_render_admin_page(): void {
                         $flabel = (string) ( $field['label'] ?: $fname );
                         $fmt    = (string) ( $field['file_format_type'] ?? '' );
 
-                        if ( 'file' === $ftype ) {
+                        if ( 'password' === $ftype ) {
+                            $registered_as = '— excluded (security)';
+                            $slug          = '';
+                        } elseif ( 'file' === $ftype ) {
                             if ( 'multi' === $fmt ) {
                                 $registered_as = 'GalleryField';
-                                $slug = 'pods_gallery_' . $pod_name . '_' . $fname;
+                                $slug          = 'pods_gallery_' . $pod_name . '_' . $fname;
                             } else {
                                 $registered_as = 'ImageField';
-                                $slug = 'pods_image_' . $pod_name . '_' . $fname;
+                                $slug          = 'pods_image_' . $pod_name . '_' . $fname;
                             }
                         } else {
                             $registered_as = 'StringField';
-                            $slug = 'pods_field_' . $pod_name . '_' . $fname;
+                            $slug          = 'pods_field_' . $pod_name . '_' . $fname;
                         }
                     ?>
                     <tr>
@@ -112,23 +122,24 @@ function oxypods_render_admin_page(): void {
 
         <!-- Diagnostics -->
         <h2>Diagnostics</h2>
-        <p>For each pod type, this shows the raw meta values for the <strong>most recently edited post</strong> of that type.
+        <p>For each pod type, this shows raw meta values for the <strong>most recently published post</strong> of that type.
            If <code>_pods_{field}</code> is empty, the post has not been saved through Pods or meta storage is disabled.</p>
         <?php
         foreach ( $all_pods as $pod_data ) :
             $pod_name  = (string) $pod_data['name'];
             $pod_label = (string) ( $pod_data['label'] ?: $pod_name );
 
+            // SECURITY: 'publish' only — never expose draft/private/trash post content.
             $sample_posts = get_posts( [
                 'post_type'      => $pod_name,
                 'posts_per_page' => 1,
                 'orderby'        => 'modified',
                 'order'          => 'DESC',
-                'post_status'    => 'any',
+                'post_status'    => 'publish',
             ] );
 
             if ( empty( $sample_posts ) ) {
-                echo '<p><strong>' . esc_html( $pod_label ) . '</strong>: no posts found.</p>';
+                echo '<p><strong>' . esc_html( $pod_label ) . '</strong>: no published posts found.</p>';
                 continue;
             }
 
@@ -150,10 +161,21 @@ function oxypods_render_admin_page(): void {
                 $fname = (string) $field['name'];
                 $ftype = (string) $field['type'];
 
+                // SECURITY: never display password field values in the UI.
+                if ( 'password' === $ftype ) :
+            ?>
+            <tr>
+                <td><code><?php echo esc_html( $fname ); ?></code></td>
+                <td><code><?php echo esc_html( $ftype ); ?></code></td>
+                <td colspan="3"><em>— excluded for security</em></td>
+            </tr>
+            <?php
+                    continue;
+                endif;
+
                 $pods_meta  = get_post_meta( $sample_id, '_pods_' . $fname, true );
                 $plain_meta = get_post_meta( $sample_id, $fname, false );
-
-                $has_data = ! empty( $pods_meta ) || ! empty( $plain_meta );
+                $has_data   = ! empty( $pods_meta ) || ! empty( $plain_meta );
             ?>
             <tr>
                 <td><code><?php echo esc_html( $fname ); ?></code></td>
@@ -175,11 +197,10 @@ function oxypods_render_admin_page(): void {
 WHERE post_id = YOUR_POST_ID
   AND (meta_key = 'your_field' OR meta_key = '_pods_your_field');</pre>
             </li>
-            <li>To debug handler output, temporarily add to your theme's <code>functions.php</code>:
+            <li>To debug image IDs, temporarily add to your theme's <code>functions.php</code>:
                 <pre style="background:#f0f0f0;padding:10px">add_action('wp_loaded', function() {
-    error_log('OxyPods IDs: ' . wp_json_encode(
-        pods_oxygen6_get_image_ids(['pod'=>'YOUR_POD','name'=>'YOUR_FIELD'])
-    ));
+    $ids = oxypods_get_attachment_ids( YOUR_POST_ID, 'YOUR_FIELD_NAME' );
+    error_log( 'OxyPods attachment IDs: ' . wp_json_encode( $ids ) );
 });</pre>
                 Then check <code>wp-content/debug.log</code>.
             </li>

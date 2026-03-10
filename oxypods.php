@@ -3,7 +3,7 @@
  * Plugin Name: OxyPods
  * Plugin URI:  https://github.com/QuirkyRobots/oxypods
  * Description: Exposes Pods custom fields in the Oxygen 6 Dynamic Data picker.
- * Version:     1.1.5
+ * Version:     1.1.6
  * Requires PHP: 8.0
  * Author:      QuirkyRobots
  * Author URI:  https://github.com/QuirkyRobots
@@ -93,6 +93,10 @@ function pods_oxygen6_bootstrap(): void {
                     }
                     break;
 
+                case 'password':
+                    // SECURITY: Never expose credential fields in the Dynamic Data picker.
+                    break;
+
                 case 'pick':
                     // Relationship field – expose as a plain string (the related
                     // post title) so it appears in the picker.
@@ -105,7 +109,7 @@ function pods_oxygen6_bootstrap(): void {
 
                 default:
                     // text, paragraph, wysiwyg, number, currency, date, datetime,
-                    // time, email, website, phone, color, code, slug, password, html
+                    // time, email, website, phone, color, code, slug, html
                     $controller->registerField( new PodsOxygen6_StringField( $meta ) );
                     break;
             }
