@@ -15,18 +15,6 @@ When you build a page in Oxygen 6, the Dynamic Data picker lets you bind element
 
 Fields render live in the visual editor, not as raw shortcodes.
 
-### Supported field types
-
-| Pods type | Registered as | Notes |
-|---|---|---|
-| `text`, `paragraph`, `wysiwyg`, `date`, `number`, `email`, `website`, `phone`, `color`, `code`, `slug`, `html` | String field | Rendered as text in the editor |
-| `file` (single) | Image field | Binds to Image elements |
-| `file` (multi) | Gallery field | Binds to Gallery elements |
-| `pick` | String field | Returns related post title |
-| `boolean` | String field | Returns stored value |
-| `oembed` | String field | Returns URL |
-| `password` | **Excluded** | Never exposed — security |
-
 ---
 
 ## Example Screenshots
