@@ -1,6 +1,6 @@
 <?php
 /**
- * Field classes for OxyPods.
+ * Field classes for OxyPods...
  *
  * HOW THIS FILE IS STRUCTURED
  * ---------------------------
